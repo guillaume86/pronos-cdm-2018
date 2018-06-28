@@ -15,6 +15,15 @@ const getPronoClassName = (points: number | null) => {
   return undefined;
 };
 
+const getGroupClassName = (points: number | null) => {
+  console.log("getGroupClassName", points);
+  if (points === 0) return "fail";
+  if (points === 1) return "two-ok";
+  if (points === 3) return "two-order-ok";
+  if (points === 5) return "all-ok";
+  return undefined;
+};
+
 const pickRandom = (arr: string[]): string =>
   arr[Math.floor(Math.random() * arr.length)];
 
@@ -120,6 +129,7 @@ class App extends React.Component<AppProps> {
       matches,
       players,
       playerRankings: rankings,
+      groups,
       teams,
     } = this.props.data;
     const winners = rankings && rankings[0].players.map((id) => players[id]);
@@ -176,8 +186,38 @@ class App extends React.Component<AppProps> {
             <MatchView data={this.props.data} defaultMatchId={defaultMatchId} />
           </div>
         )}
+        <div>
+          <h2>Groupes</h2>
+          {Object.keys(groups).map((groupId) => {
+            const group = groups[groupId];
+            return (
+              <div key={groupId}>
+                <h3>{group.groupName}</h3>
+                <table className="table table-sm table-bordered">
+                  <tbody>
+                    {group.teamRankings.map((ranking, index) => {
+                      const team = teams[ranking.teamId];
+                      return (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>{team.teamName}</td>
+                          <td>{ranking.gamesPlayed}</td>
+                          <td>{ranking.goalsFor}</td>
+                          <td>{ranking.goalsAgainst}</td>
+                          <td>{ranking.goalsDiff}</td>
+                          <td>{ranking.points}</td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            );
+          })}
+        </div>
         {Object.keys(players).map((playerId) => {
           const player = players[playerId];
+          console.log(player.groupsScores);
           return (
             <div key={playerId}>
               <h2 id={playerId}>{player.name}</h2>
@@ -206,11 +246,50 @@ class App extends React.Component<AppProps> {
                             formatScore(match.home.score, match.away.score)}
                         </td>
                         <td>{teams[match.away.teamId].teamName}</td>
+                        <td>+{prono.result}</td>
                       </tr>
                     );
                   })}
                 </tbody>
               </table>
+              <div>
+                {Object.keys(groups).map((groupId) => {
+                  const group = groups[groupId];
+                  const pRankings = player.groups[groupId];
+                  const groupScore = player.groupsScores.groupsScore[groupId];
+                  return (
+                    <div key={groupId}>
+                      <h3>
+                        {group.groupName} (+{groupScore})
+                      </h3>
+                      <table className="table table-sm table-bordered">
+                        <tbody className={getGroupClassName(groupScore)}>
+                          {pRankings.map((ranking, index) => {
+                            const team = teams[ranking.teamId];
+                            return (
+                              <tr key={index}>
+                                <td>{index + 1}</td>
+                                <td>{team.teamName}</td>
+                                <td>{ranking.gamesPlayed}</td>
+                                <td>{ranking.goalsFor}</td>
+                                <td>{ranking.goalsAgainst}</td>
+                                <td>{ranking.goalsDiff}</td>
+                                <td>{ranking.points}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
+                  );
+                })}
+              </div>
+              <div>
+                <p>Top goalscorer: +{player.bestGoalscorerScore}</p>
+              </div>
+              <div>
+                <p>Total points: {player.totalScore}</p>
+              </div>
             </div>
           );
         })}

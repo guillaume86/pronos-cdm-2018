@@ -1,4 +1,5 @@
-h1, p {
+h1,
+p {
   font-family: Lato;
 }
 
@@ -28,4 +29,19 @@ h1, p {
 
 .winner {
   margin-bottom: 20px;
+}
+
+tbody.fail tr {
+  background: #fb8d8d;
+}
+tbody.two-ok tr:nth-child(1),
+tbody.two-ok tr:nth-child(2) {
+  background: #5cc5fc;
+}
+tbody.two-order-ok tr:nth-child(1),
+tbody.two-order-ok tr:nth-child(2) {
+  background: #5cc55c;
+}
+tbody.all-ok tr {
+  background: #f9f422;
 }

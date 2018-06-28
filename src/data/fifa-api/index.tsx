@@ -46,12 +46,12 @@ export type PredictionMap = Record<
 >;
 
 const rankingComparer = (a: GroupRankingData, b: GroupRankingData): number => {
-  if (a.points > b.points) return 1;
-  if (a.points < b.points) return -1;
-  if (a.goalsDiff > b.goalsDiff) return 1;
-  if (a.goalsDiff < b.goalsDiff) return -1;
-  if (a.goalsFor > b.goalsFor) return 1;
-  if (a.goalsFor < b.goalsFor) return -1;
+  if (a.points > b.points) return -1;
+  if (a.points < b.points) return 1;
+  if (a.goalsDiff > b.goalsDiff) return -1;
+  if (a.goalsDiff < b.goalsDiff) return 1;
+  if (a.goalsFor > b.goalsFor) return -1;
+  if (a.goalsFor < b.goalsFor) return 1;
   return 0; // TODO? tie breaker rules: http://www.livescore.com/worldcup/rules/
 };
 

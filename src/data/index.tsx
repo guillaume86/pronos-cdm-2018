@@ -20,7 +20,7 @@ export interface PlayerData {
   playerId: string;
   name: string;
   matchesScore: number;
-  groupsScore: number;
+  groupsScores: GroupScoreData;
   bestGoalscorerScore: number;
   totalScore: number;
   matches: Record<string, MatchPrediction>;
@@ -101,7 +101,7 @@ function buildData({ groups, matches, teams }: FifaApi.TournamentData) {
         .map((p) => p.result)
     );
 
-    const groupsScore = computeGroupsScore(groups, pGroupRankings);
+    const groupsScores = computeGroupsScore(groups, pGroupRankings);
     const bestGoalscorerScore =
       ["Antoine", "Remy"].indexOf(playerId) !== -1 ? 3 : 0;
 
@@ -111,9 +111,9 @@ function buildData({ groups, matches, teams }: FifaApi.TournamentData) {
       matches: predictionMap,
       groups: pGroupRankings,
       matchesScore,
-      groupsScore,
+      groupsScores,
       bestGoalscorerScore,
-      totalScore: matchesScore + groupsScore + bestGoalscorerScore,
+      totalScore: matchesScore + groupsScores.score + bestGoalscorerScore,
     };
   }
 
@@ -153,24 +153,37 @@ export enum GroupPredictionResult {
 function computeGroupsScore(
   groups: FifaApi.GroupsMap,
   pGroupRankings: FifaApi.GroupRankingsMap
-): number {
+) {
+  const groupsScore: Record<string, GroupPredictionResult> = {};
   let score = 0;
 
   for (const groupId of Object.keys(groups)) {
     const group = groups[groupId];
     const pGroup = pGroupRankings[groupId];
 
-    if (isPerfectGroupPrediction(group.teamRankings, pGroup))
+    if (isPerfectGroupPrediction(group.teamRankings, pGroup)) {
       score += GroupPredictionResult.perfect;
-    else if (isQualifiedRightOrderGroupPrediction(group.teamRankings, pGroup))
+      groupsScore[groupId] = GroupPredictionResult.perfect;
+    } else if (
+      isQualifiedRightOrderGroupPrediction(group.teamRankings, pGroup)
+    ) {
       score += GroupPredictionResult.qualifiedRightOrder;
-    else if (isQualifiedWrongOrderGroupPrediction(group.teamRankings, pGroup))
+      groupsScore[groupId] = GroupPredictionResult.qualifiedRightOrder;
+    } else if (
+      isQualifiedWrongOrderGroupPrediction(group.teamRankings, pGroup)
+    ) {
       score += GroupPredictionResult.qualifiedWrongOrder;
-    else score += GroupPredictionResult.fail;
+      groupsScore[groupId] = GroupPredictionResult.qualifiedWrongOrder;
+    } else {
+      score += GroupPredictionResult.fail;
+      groupsScore[groupId] = GroupPredictionResult.fail;
+    }
   }
 
-  return score;
+  return { groupsScore, score };
 }
+
+export type GroupScoreData = ReturnType<typeof computeGroupsScore>;
 
 function isPerfectGroupPrediction(
   correct: FifaApi.GroupRankingData[],
