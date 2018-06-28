@@ -154,6 +154,16 @@ class App extends React.Component<AppProps> {
                 </div>
               ))}
             <table className="table table-sm table-bordered ranking-table">
+              <thead>
+                <tr>
+                  <th />
+                  <th />
+                  <th>Matches</th>
+                  <th>Groups</th>
+                  <th>Top goalscorer</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
               <tbody>
                 {rankings.map((rank, index) => (
                   <React.Fragment key={index}>
@@ -164,6 +174,9 @@ class App extends React.Component<AppProps> {
                           {players[rank.players[0]].name}
                         </a>
                       </td>
+                      <td>{players[rank.players[0]].matchesScore}</td>
+                      <td>{players[rank.players[0]].groupsScores.score}</td>
+                      <td>{players[rank.players[0]].bestGoalscorerScore}</td>
                       <td>{rank.points}</td>
                     </tr>
                     {rank.players.slice(1).map((playerId) => (
@@ -171,6 +184,9 @@ class App extends React.Component<AppProps> {
                         <td>
                           <a href={`#${playerId}`}>{players[playerId].name}</a>
                         </td>
+                        <td>{players[playerId].matchesScore}</td>
+                        <td>{players[playerId].groupsScores.score}</td>
+                        <td>{players[playerId].bestGoalscorerScore}</td>
                         <td>{rank.points}</td>
                       </tr>
                     ))}
