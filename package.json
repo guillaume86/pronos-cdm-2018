@@ -1,12 +1,14 @@
 {
   "name": "pronos-cdm-2018",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "homepage": "http://guillaume86.github.io/pronos-cdm-2018",
   "devDependencies": {
     "@types/jest": "^23.1.0",
     "@types/node": "^10.3.3",
     "@types/react": "^16.3.18",
     "@types/react-dom": "^16.0.6",
+    "gh-pages": "^1.2.0",
     "react-scripts-ts": "2.16.0",
     "typescript": "^2.9.2"
   },
@@ -18,6 +20,8 @@
     "start": "react-scripts-ts start",
     "build": "react-scripts-ts build",
     "test": "react-scripts-ts test --env=jsdom",
-    "eject": "react-scripts-ts eject"
+    "eject": "react-scripts-ts eject",
+    "predeploy": "yarn build",
+    "deploy": "gh-pages -d build"
   }
 }
