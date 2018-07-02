@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="theme-color" content="#000000">
+
+  <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" rel="stylesheet">
+
+  <link rel="shortcut icon" href="../favicon.ico">
+  <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+  <title>Concours Pronos Coupe du Monde 2018 </title>
+</head>
+
+<body>
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+  <div id="root"></div>
+  <script>
+    (function () {
+      var players = [
+        'Antoine',
+        'Boris',
+        'Chris',
+        'Francois_Collart',
+        'Francois_Mary',
+        'Guillaume',
+        'Harold',
+        'Mathieu',
+        'Quentin',
+        'Remy',
+        'Seb',
+        'Stephano',
+        'Thomas',
+      ];
+
+      var Menu = function (props) {
+        return props.players.map(player =>
+          React.createElement("li", { key: player },
+            React.createElement("a", { href: "#" + player }, player.replace("_", " "))
+          )
+        )
+      }
+
+      var Details = function (props) {
+        var player = props.player;
+        return React.createElement("div", { key: player, id: player }, [
+          React.createElement("h3", null, player.replace("_", " ")),
+          React.createElement("img", { src: "img/" + player + ".png" }),
+        ]);
+      };
+
+      var DetailsList = function (props) {
+        return props.players.map(player =>
+          React.createElement(Details, { key: player, player: player })
+        )
+      }
+
+      var App = function (props) {
+        return React.createElement("div", { className: "container" }, [
+          React.createElement(Menu, props),
+          React.createElement(DetailsList, props),
+        ]);
+      }
+
+      ReactDOM.render(
+        React.createElement(App, { players: players }, null),
+        document.getElementById('root')
+      )
+    })();
+  </script>
+</body>
+
+</html>
