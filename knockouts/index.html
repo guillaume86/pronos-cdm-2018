@@ -59,7 +59,7 @@
         var player = props.player;
         return React.createElement("div", { key: player, id: player }, [
           React.createElement("h3", null, player.replace("_", " ")),
-          React.createElement("img", { src: "img/" + player + ".png" }),
+          React.createElement("img", { src: "img/" + player.toLowerCase() + ".PNG" }),
         ]);
       };
 
